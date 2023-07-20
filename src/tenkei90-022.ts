@@ -1,5 +1,6 @@
 import * as readline from "readline";
 
+//ユーグリッドの互除法
 function gcd(a: bigint, b: bigint): bigint {
     if (b === 0n) {
         return a;
