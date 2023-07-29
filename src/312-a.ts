@@ -13,6 +13,20 @@ rl.on("line", (line) => {
 });
 
 rl.on("close", () => {
-    // Parse the number of rows and columns
-    let [N, M] = input[0].split(" ").map(Number);
+    const s = input[0];
+
+    if (
+        s === "ACE" ||
+        s === "BDF" ||
+        s === "ACE" ||
+        s === "CEG" ||
+        s === "DFA" ||
+        s === "EGB" ||
+        s === "FAC" ||
+        s === "GBD"
+    ) {
+        console.log("Yes");
+    } else {
+        console.log("No");
+    }
 });
