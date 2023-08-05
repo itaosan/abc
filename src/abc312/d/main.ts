@@ -12,8 +12,6 @@ rl.on("line", (line) => {
 });
 
 rl.on("close", () => {
-  //const N = parseInt(input[0]);
   const [N, M] = input[0].split(" ").map(Number);
   const S = input.slice(1);
-
 });
