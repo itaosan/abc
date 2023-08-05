@@ -40,7 +40,12 @@
       "id": "abc312_d",
       "label": "D",
       "title": "Count Bracket Sequences",
-      "url": "https://atcoder.jp/contests/abc312/tasks/abc312_d"
+      "url": "https://atcoder.jp/contests/abc312/tasks/abc312_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "main.ts"
+      }
     },
     {
       "id": "abc312_e",
