@@ -42,7 +42,12 @@
       "id": "abc313_d",
       "label": "D",
       "title": "Odd or Even",
-      "url": "https://atcoder.jp/contests/abc313/tasks/abc313_d"
+      "url": "https://atcoder.jp/contests/abc313/tasks/abc313_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "main.ts"
+      }
     },
     {
       "id": "abc313_e",
