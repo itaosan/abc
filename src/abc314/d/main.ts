@@ -16,33 +16,6 @@ rl.on("close", () => {
   let S: string[] = input[1].split("");
   const Q = parseInt(input[2]);
 
-  // const query: string[][] = [];
-  // for (let i = 0; i < Q; i++) {
-  //   query.push(input[i + 3].split(" "));
-  // }
-  // let last: number = -1;
-
-  // for (let i = 0; i < query.length; i++) {
-  //   const [t, _, _2] = query[i];
-  //   if (t === "2" || t === "3") {
-  //     last = i;
-  //   }
-  // }
-  // for (let i = 0; i < query.length; i++) {
-  //   const [t, x, c] = query[i];
-  //   if (t === "1") {
-  //     S[parseInt(x, 10) - 1] = c;
-  //   } else if (t === "2") {
-  //     if (i === last) {
-  //       S = Array.from(S.join("").toLowerCase());
-  //     }
-  //   } else {
-  //     if (i === last) {
-  //       S = Array.from(S.join("").toUpperCase());
-  //     }
-  //   }
-  // }
-
   const query: string[][] = [];
   for (let i = 0; i < Q; i++) {
     query.push(input[i + 3].split(" "));
