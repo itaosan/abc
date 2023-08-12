@@ -13,32 +13,62 @@ rl.on("line", (line) => {
 
 rl.on("close", () => {
   const N = parseInt(input[0]);
-  let S: string = input[1];
+  let S: string[] = input[1].split("");
   const Q = parseInt(input[2]);
-  const sousaSumi = new Array<number>(S.length).fill(0);
-  let ans = S.split('')
 
-  //逆順
-  let finalMode = 0;
+  // const query: string[][] = [];
+  // for (let i = 0; i < Q; i++) {
+  //   query.push(input[i + 3].split(" "));
+  // }
+  // let last: number = -1;
+
+  // for (let i = 0; i < query.length; i++) {
+  //   const [t, _, _2] = query[i];
+  //   if (t === "2" || t === "3") {
+  //     last = i;
+  //   }
+  // }
+  // for (let i = 0; i < query.length; i++) {
+  //   const [t, x, c] = query[i];
+  //   if (t === "1") {
+  //     S[parseInt(x, 10) - 1] = c;
+  //   } else if (t === "2") {
+  //     if (i === last) {
+  //       S = Array.from(S.join("").toLowerCase());
+  //     }
+  //   } else {
+  //     if (i === last) {
+  //       S = Array.from(S.join("").toUpperCase());
+  //     }
+  //   }
+  // }
+
+  const query: string[][] = [];
+  for (let i = 0; i < Q; i++) {
+    query.push(input[i + 3].split(" "));
+  }
+  let last: number = -1;
+
+  for (let i = 0; i < query.length; i++) {
+    const [t, _, _2] = query[i];
+    if (t === "2" || t === "3") {
+      last = i;
+    }
+  }
+
   for (let i = 0; i < Q; i++) {
     const val = input[i + 3].split(" ").map(String);
     const mode = parseInt(val[0]);
     if (mode === 1) {
-      const inx = parseInt(val[1]) - 1;
-      let v = val[2];
-      ans[inx] = v
-      // const chars = S.split("");
-      // chars[inx] = val[2];
-      // S = chars.join("");
-      // sousaSumi[inx] = 1;
+      S[parseInt(val[1]) - 1] = val[2];
     }
-    if (mode === 2) {
+    if (mode === 2 && i === last) {
       //全部小文字
-      S = S.toLowerCase();
+      S = Array.from(S.join("").toLowerCase());
     }
-    if (mode === 3) {
-      S = S.toUpperCase();
+    if (mode === 3 && i === last) {
+      S = Array.from(S.join("").toUpperCase());
     }
   }
-  console.log(S);
+  console.log(S.join(""));
 });
