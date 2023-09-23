@@ -6,7 +6,7 @@
   "configurations": [
     {
       "name": "Launch Program",
-      "program": "${workspaceFolder}/src/abc318/c/main.ts",
+      "program": "${workspaceFolder}/src/abc321/b/main.ts",
       "request": "launch",
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
