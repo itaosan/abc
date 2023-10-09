@@ -1,69 +1,51 @@
 import * as readline from "readline";
-
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-let input: string[] = [];
-
-rl.on("line", (line) => {
-  input.push(line);
-});
-
-type Slime = {
-  no: number;
-  size: number;
-  cnt: number;
+type Pair = {
+  x: number;
+  y: bigint;
 };
 
-rl.on("close", () => {
-  const N = parseInt(input[0]);
-  //const [N, M] = input[0].split(" ").map(Number);
-  let slimes: Slime[] = [];
-  for (let i = 0; i < N; i++) {
-    const S = input[i + 1].split(" ").map(Number);
-    const slime: Slime = {
-      no: i,
-      size: S[0],
-      cnt: S[1],
-    };
-    slimes.push(slime);
-  }
+let inputCount = 0;
+let n = 0;
+const mp: Map<number, bigint> = new Map();
 
-  //小さい順にソート
-  slimes.sort((a,b)=> a.size - b.size)
+rl.on("line", (input: string) => {
+  if (inputCount === 0) {
+    n = parseInt(input);
+    inputCount++;
+  } else {
+    const inputs = input.split(" ").map((s) => parseInt(s));
+    let x = inputs[0];
+    let y = BigInt(inputs[1]);
 
-  const slimeMap = new Map<number, number>();
-
-  for (const slime of slimes) {
-    slimeMap.set(slime.size, slime.cnt);
-  }
-
-  for (const [size, count] of slimeMap) {
-    let newCount = count;
-    let multiplier = 2;
-    
-    // ビット演算を用いて合成を行う
-    while (newCount >= 2) {
-        const pairs = newCount >> 1; // 合成ペアの数
-        const newSize = size * multiplier;
-        const existingCount = slimeMap.get(newSize) || 0;
-
-        slimeMap.set(newSize, existingCount + pairs);
-        newCount %= 2;
-        multiplier *= 2;
+    while ((x & 1) === 0) {
+      x >>= 1;
+      y <<= 1n;
     }
 
-    // 更新したカウントで現在のサイズを更新する
-    slimeMap.set(size, newCount);
+    mp.set(x, (mp.get(x) || 0n) + y);
+
+    if (inputCount === n) {
+      rl.close();
+    } else {
+      inputCount++;
+    }
+  }
+});
+
+rl.on("close", () => {
+  let ans = 0;
+
+  for (let [_, y] of mp.entries()) {
+    while (y > 0n) {
+      if (y & 1n) ans++;
+      y >>= 1n;
+    }
   }
 
-  // 最終的なスライムの合計数を計算
-  let totalCount = 0;
-  for (const count of slimeMap.values()) {
-    totalCount += count;
-  }
-
-  console.log(totalCount);
+  console.log(ans);
 });

@@ -1,4 +1,10 @@
 import * as readline from "readline";
+const DEBUG = false;
+function debug(arg: string) {
+  if (DEBUG) {
+    console.log(arg);
+  }
+}
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -7,40 +13,47 @@ const rl = readline.createInterface({
 
 let input: string[] = [];
 
-rl.on("line", (line) => {
+rl.on("line", (line: string) => {
   input.push(line);
 });
 
 rl.on("close", () => {
-  //const N = parseInt(input[0]);
-  const [N, K, P] = input[0].split(" ").map(Number);
-  const plans = input.slice(1).map((line) => line.split(" ").map(Number));
+  main(input);
+});
 
-  const INF = 1e18;
+function main(input: string[]) {
+  const [[N, K, P], ...CA]: number[][] = input.map((line) => line.split(" ").map(Number));
+  let max = (P + 1) ** K;
+  let dp: number[] = new Array(max).fill(Infinity);
+  dp[0] = 0;
 
-  const minCost = (N: number, K: number, P: number, plans: number[][]): number => {
-    let dp: number[][] = Array.from({ length: N + 1 }, () => Array(K * P + 1).fill(INF));
-    dp[0][0] = 0;
-
-    for (let i = 0; i < N; i++) {
-      for (let j = 0; j <= K * P; j++) {
-        dp[i + 1][j] = Math.min(dp[i + 1][j], dp[i][j]); // 開発案を採用しない場合
-        let sum = 0;
-        for (let l = 1; l <= K; l++) {
-          sum += Math.min(plans[i][l], P); // 各パラメータがP以上になる場合には加算しない
-          const nj = Math.min(K * P, j + sum);
-          dp[i + 1][nj] = Math.min(dp[i + 1][nj], dp[i][j] + plans[i][0]); // 開発案を採用する場合
-        }
+  for (let i = 0; i < N; i++) {
+    const [C, ...A] = CA[i];
+    for (let bit = max - 1; bit >= 0; bit--) {
+      let flag: number[] = bit
+        .toString(P + 1)
+        .padStart(K, "0")
+        .split("")
+        .map(Number);
+      for (let j = 0; j < K; j++) {
+        flag[j] = Math.min(P, flag[j] + A[j]);
+      }
+      let trans = parseInt(flag.join(""), P + 1);
+      dp[trans] = Math.min(dp[bit] + C, dp[trans]);
+      if (dp[trans] !== Infinity) {
+        debug(
+          `bit = ${bit
+            .toString(P + 1)
+            .padStart(K, "0")
+            .split("")} : trans= ${trans
+            .toString(P + 1)
+            .padStart(K, "0")
+            .split("")} :dp[trans]= ${dp[trans]}`
+        );
       }
     }
+    debug(`dp[max - 1] = ${dp[max - 1]}`);
+  }
 
-    let result = INF;
-    for (let i = P * K; i <= K * P; i++) {
-      result = Math.min(result, dp[N][i]);
-    }
-
-    return result === INF ? -1 : result;
-  };
-
-  console.log(minCost(N, K, P, plans));
-});
+  console.log(dp[max - 1] === Infinity ? -1 : dp[max - 1]);
+}
