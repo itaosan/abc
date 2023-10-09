@@ -1,5 +1,12 @@
 import * as readline from "readline";
 
+const DEBUG = false;
+function debug(arg: string) {
+  if (DEBUG) {
+    console.log(arg);
+  }
+}
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
