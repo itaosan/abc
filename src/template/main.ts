@@ -1,18 +1,21 @@
-import * as readline from "readline";
+import * as fs from "fs";
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const DEBUG = false;
+function debug(arg: string) {
+  if (DEBUG) {
+    console.log(arg);
+  }
+}
 
-let input: string[] = [];
+const input = fs.readFileSync("/dev/stdin", "utf8").split("\n");
+let inputIndex = 0;
 
-rl.on("line", (line) => {
-  input.push(line);
-});
+const readLine = () => input[inputIndex++];
 
-rl.on("close", () => {
-  //const N = parseInt(input[0]);
-  const [N, M] = input[0].split(" ").map(Number);
-  const S = input.slice(1);
-});
+//const N = parseInt(readLine());
+const [N, M] = readLine().split(" ").map(Number);
+const S = readLine().split(" ").map(Number);
+//const h = [0, ...readLine().split(" ").map(Number)];
+
+//Number.MIN_VALUE
+//Number.MAX_VALUE
