@@ -42,13 +42,23 @@
       "id": "dp_d",
       "label": "D",
       "title": "Knapsack 1",
-      "url": "https://atcoder.jp/contests/dp/tasks/dp_d"
+      "url": "https://atcoder.jp/contests/dp/tasks/dp_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "main.ts"
+      }
     },
     {
       "id": "dp_e",
       "label": "E",
       "title": "Knapsack 2",
-      "url": "https://atcoder.jp/contests/dp/tasks/dp_e"
+      "url": "https://atcoder.jp/contests/dp/tasks/dp_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "main.ts"
+      }
     },
     {
       "id": "dp_f",
