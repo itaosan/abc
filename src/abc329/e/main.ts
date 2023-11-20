@@ -12,31 +12,39 @@ let inputIndex = 0;
 
 const readLine = () => input[inputIndex++];
 
-//const N = parseInt(readLine());
-const [N, M] = readLine().split(" ").map(Number);
-const S = readLine();
-const T = readLine();
-//const h = [0, ...readLine().split(" ").map(Number)];
-
-function canTransform(N: number, M: number, S: string, T: string): string {
-  for (let i = 0; i <= N - M; i++) {
-      let isMatch = true;
-      for (let j = 0; j < M; j++) {
-          if (S[i + j] !== T[j]) {
-              isMatch = false;
-              break;
-          }
-      }
-      if (isMatch) {
-          // Sの部分文字列がTと一致した場合、残りの部分もチェックする
-          const remaining = S.substring(0, i) + T + S.substring(i + M);
-          if (remaining === S) {
-              return "Yes";
-          }
-      }
+const check = (pos: number, s: string[], t: string[], tn: number): boolean => {
+  for (let i = 0; i < tn; i++) {
+    if (s[pos + i] !== "." && s[pos + i] !== t[i]) {
+      return false;
+    }
   }
-  return "No";
+
+  let cnt = 0;
+  for (let i = 0; i < tn; i++) {
+    if (s[pos + i] === ".") {
+      cnt++;
+    }
+    s[pos + i] = ".";
+  }
+  return cnt !== tn;
+};
+
+const [sn, tn] = readLine().split(" ").map(Number);
+const s: string[] = readLine().split("");
+const t: string[] = readLine().split("");
+
+for (let i = 0; i <= sn - tn; i++) {
+  if (check(i, s, t, tn)) {
+    i = Math.max(-1, i - tn);
+  }
 }
 
-// 入力例
-console.log(canTransform(N, M, S, T)); // 出力例1: Yes
+let flag = true;
+for (let i = 0; i < sn; i++) {
+  if (s[i] !== ".") {
+    console.log("No");
+    flag = false;
+    break;
+  }
+}
+if (flag) console.log("Yes");
