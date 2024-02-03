@@ -7,114 +7,81 @@ function debug(arg: string) {
   }
 }
 
+// グローバル変数を定義します。
+const inf = 1000000010;
+const dx = [-1, 0, 1, 0];
+const dy = [0, 1, 0, -1];
+
+// 必要な型定義をします
+interface Position {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  step: number;
+}
+
 const input = fs.readFileSync("/dev/stdin", "utf8").split("\n");
 let inputIndex = 0;
 
 const readLine = () => input[inputIndex++];
 
-const N = parseInt(readLine());
+const n = parseInt(readLine());
 
-//N×Nのマス目を作成
-const grid = Array.from({ length: N }, () => readLine());
-
-//プレイヤー１の位置
-let player1 = { row: -1, col: -1 };
-//プレイヤー２の位置
-let player2 = { row: -1, col: -1 };
-
-//プレイヤーの位置を探す
-for (let i = 0; i < N; i++) {
-  for (let j = 0; j < N; j++) {
-    if (grid[i][j] === "P") {
-      if (player1.row === -1 && player1.col === -1) {
-        player1.row = i;
-        player1.col = j;
+const map: boolean[][] = new Array(n);
+let px1 = -1;
+let py1 = -1;
+let px2 = -1;
+let py2 = -1;
+for (let i = 0; i < n; i++) {
+  map[i] = new Array(n);
+  for (let j = 0; j < n; j++) {
+    map[i][j] = input[i + 1][j] === "#";
+    if (input[i + 1][j] === "P") {
+      if (px1 < 0) {
+        px1 = i;
+        py1 = j;
       } else {
-        player2.row = i;
-        player2.col = j;
+        px2 = i;
+        py2 = j;
       }
     }
   }
 }
 
-//プレイヤー１とプレイヤー２を同じ位置に移動させる
-//同じ位置に移動できない場合は-1を出力
-//BFSを使って最短距離を求める
+const queue: Position[] = [];
+let idx = 0;
+const visited = new Set<number>();
 
-//移動するためのキュー
-//キューに入る要素はプレイヤー１とプレイヤー２の位置と移動回数なので、型を定義する
-type Player = { row: number; col: number };
-type QueueElement = { player1: Player; player2: Player; count: number };
-//キューを作成
-const queue: QueueElement[] = [];
-//訪問済みのマス目(プレイヤー１)
-const visited = Array.from({ length: N }, () => Array(N).fill(false));
-//訪問済みのマス目(プレイヤー２)
-const visited2 = Array.from({ length: N }, () => Array(N).fill(false));
-//移動する方向
-const dx = [0, 1, 0, -1];
-const dy = [-1, 0, 1, 0];
-//プレイヤー１とプレイヤー２の位置をキューに追加
-queue.push({ player1, player2, count: 0 });
-//プレイヤー１とプレイヤー２が同じ位置になるまで移動する
-//見つかったかどうかのフラグ
-let found = false;
-while (queue.length > 0) {
-  //queueはundefinedにならないので、!をつける
-  const { player1, player2, count } = queue.shift()!;
-  if (player1.row === player2.row && player1.col === player2.col) {
-    console.log(count);
-    found = true;
-    break;
-  }
-  for (let i = 0; i < 4; i++) {
-    const nextPlayer1 = { row: player1.row + dy[i], col: player1.col + dx[i] };
-    const nextPlayer2 = { row: player2.row + dy[i], col: player2.col + dx[i] };
-    //両方のプレイヤーが移動できない場合はスキップ
-    if (
-      (nextPlayer1.row < 0 ||
-        nextPlayer1.row >= N ||
-        nextPlayer1.col < 0 ||
-        nextPlayer1.col >= N ||
-        grid[nextPlayer1.row][nextPlayer1.col] === "#") &&
-      (nextPlayer2.row < 0 ||
-        nextPlayer2.row >= N ||
-        nextPlayer2.col < 0 ||
-        nextPlayer2.col >= N ||
-        grid[nextPlayer2.row][nextPlayer2.col] === "#")
-    ) {
-      continue;
-    } else if (
-      nextPlayer1.row < 0 ||
-      nextPlayer1.row >= N ||
-      nextPlayer1.col < 0 ||
-      nextPlayer1.col >= N ||
-      grid[nextPlayer1.row][nextPlayer1.col] === "#"
-    ) {
-      nextPlayer1.row = player1.row;
-      nextPlayer1.col = player1.col;
-    } else if (
-      nextPlayer2.row < 0 ||
-      nextPlayer2.row >= N ||
-      nextPlayer2.col < 0 ||
-      nextPlayer2.col >= N ||
-      grid[nextPlayer2.row][nextPlayer2.col] === "#"
-    ) {
-      nextPlayer2.row = player2.row;
-      nextPlayer2.col = player2.col;
-    }
+queue.push({ x1: px1, y1: py1, x2: px2, y2: py2, step: 0 });
+visited.add(px1 + py1 * n + px2 * n * n + py2 * n * n * n);
 
-    //移動済みのマス目はスキップ
-    if (visited[nextPlayer1.row][nextPlayer1.col] && visited2[nextPlayer2.row][nextPlayer2.col]) {
-      continue;
+while (idx < queue.length) {
+  const current = queue[idx];
+  for (let dir = 0; dir < 4; dir++) {
+    let nx1 = current.x1 + ((dir + 1) % 2) * Math.sign(dir - 1);
+    let ny1 = current.y1 + (dir % 2) * Math.sign(2 - dir);
+    let nx2 = current.x2 + ((dir + 1) % 2) * Math.sign(dir - 1);
+    let ny2 = current.y2 + (dir % 2) * Math.sign(2 - dir);
+    if (nx1 < 0 || nx1 >= n || ny1 < 0 || ny1 >= n || map[nx1][ny1]) {
+      nx1 = current.x1;
+      ny1 = current.y1;
     }
-    //移動済みのマス目に追加
-    visited[nextPlayer1.row][nextPlayer1.col] = true;
-    visited2[nextPlayer2.row][nextPlayer2.col] = true;
-    //プレイヤー１とプレイヤー２の位置を出力
-    debug(`count: ${count}-${i} player1: ${nextPlayer1.row} ${nextPlayer1.col} player2: ${nextPlayer2.row} ${nextPlayer2.col}`);
-    queue.push({ player1: nextPlayer1, player2: nextPlayer2, count: count + 1 });
+    if (nx2 < 0 || nx2 >= n || ny2 < 0 || ny2 >= n || map[nx2][ny2]) {
+      nx2 = current.x2;
+      ny2 = current.y2;
+    }
+    if (nx1 === nx2 && ny1 === ny2) {
+      console.log(current.step + 1);
+      process.exit(0);
+    }
+    const d = nx1 + ny1 * n + nx2 * n * n + ny2 * n * n * n;
+    if (!visited.has(d)) {
+      visited.add(d);
+      queue.push({ x1: nx1, y1: ny1, x2: nx2, y2: ny2, step: current.step + 1 });
+    }
   }
+  idx++;
 }
-//同じ位置に移動できない場合は-1を出力
-if (!found) console.log(-1);
+
+console.log(-1);
