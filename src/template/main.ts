@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 
 //移動する方向
 const dx = [0, 1, 0, -1];
