@@ -9,5 +9,16 @@ let inputIndex = 0;
 const readLine = () => input[inputIndex++];
 
 //const N = Number.parseInt(readLine());
-//const [N, M] = readLine().split(" ").map(Number);
+const [N, K] = readLine().split(" ").map(Number);
+const A = readLine().split(" ").map(Number);
 //const S = readLine()
+
+const ans = [];
+
+for (let i = 0; i < N; i++) {
+  if (A[i] % K === 0) {
+    ans.push(A[i] / K);
+  }
+}
+
+console.log(ans.join(" "));

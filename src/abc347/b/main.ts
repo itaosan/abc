@@ -10,4 +10,14 @@ const readLine = () => input[inputIndex++];
 
 //const N = Number.parseInt(readLine());
 //const [N, M] = readLine().split(" ").map(Number);
-//const S = readLine()
+const S = readLine()
+
+//Sの部分文字列を全て列挙
+const ans = new Set<string>();
+for (let i = 0; i < S.length; i++) {
+  for (let j = i + 1; j <= S.length; j++) {
+    ans.add(S.slice(i, j));
+  }
+}
+
+console.log(ans.size);
