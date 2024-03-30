@@ -8,6 +8,12 @@ const input = fs.readFileSync("/dev/stdin", "utf8").split("\n");
 let inputIndex = 0;
 const readLine = () => input[inputIndex++];
 
-//const N = Number.parseInt(readLine());
-//const [N, M] = readLine().split(" ").map(Number);
-//const S = readLine()
+const N = Number.parseInt(readLine());
+const A = readLine().split(" ").map(Number);
+const B = [];
+
+for (let i = 0; i < N - 1; i++) {
+  B.push(A[i] * A[i + 1]);
+}
+
+console.log(B.join(" "));
