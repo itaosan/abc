@@ -1,14 +1,22 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "typescript",
-			"tsconfig": "tsconfig.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"group": "build",
-			"label": "tsconfig"
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "tsconfig",
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "problemMatcher": ["$tsc"],
+      "group": "build"
+    },
+    {
+      "label": "Run Online Judge Tests",
+      "type": "shell",
+      "command": "oj t -c 'ts-node ${file}' -d '${fileDirname}/tests/'",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
 }
